@@ -108,7 +108,7 @@ function request(options, callback) {
     for(var p in obj){
         if (obj.hasOwnProperty(p)) {
             lines.push(
-                '--'+result.boundry+"\n"+
+                result.boundry+"\n"+
                 `Content-Disposition: form-data; name="${p}"${obj[p].fileName ? '; filename="' + obj[p].fileName + '"' : ''}\n`+
                 'Content-Type: '+ (obj[p].mimeType || '') +"\n"+
                 "\n"+
@@ -116,7 +116,7 @@ function request(options, callback) {
             );
         }
     }
-    lines.push( '--'+result.boundry+'--' );
+    lines.push( result.boundry );
     result.body = lines.join('');
     result.length = result.body.length;
     result.type = 'multipart/form-data; boundary='+result.boundry;
