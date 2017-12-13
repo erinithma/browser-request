@@ -100,7 +100,7 @@ function request(options, callback) {
   //END QS Hack
   
   //BEGIN FORM Hack
-  var multipart = function(obj) {
+  var multipart = function(obj, contentType) {
     //todo: support file type (useful?)
     var result = {};
     result.boundry = '-------------------------------'+Math.floor(Math.random()*1000000000);
@@ -110,6 +110,7 @@ function request(options, callback) {
             lines.push(
                 '--'+result.boundry+"\n"+
                 'Content-Disposition: form-data; name="'+p+'"'+"\n"+
+                'Content-Type: '+ (contentType || '') +"\n"+
                 "\n"+
                 obj[p]+"\n"
             );
@@ -132,10 +133,10 @@ function request(options, callback) {
                 options.body = serialize(options.form).replace(/%20/g, "+");
                 break;
             case 'multipart/form-data':
-                var multi = multipart(options.form);
+                var multi = multipart(options.form, multi.type);
                 //options.headers['content-length'] = multi.length;
                 options.body = multi.body;
-                options.headers['content-type'] = multi.type;
+                //options.headers['content-type'] = multi.type;
                 break;
             default : throw new Error('unsupported encoding:'+encoding);
         }
